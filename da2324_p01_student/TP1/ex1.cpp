@@ -1,4 +1,7 @@
 #include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
 #include "../data_structures/Graph.h"
 
 using namespace std;
