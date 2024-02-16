@@ -12,7 +12,21 @@ using namespace std;
  */
 template <typename T>
 bool isDAG(const Graph<T>* g)  {
-    //TODO
+    // Mark all vertices as not visited and not processing
+    for (const auto& vertex : g->getVertexSet()) {
+        vertex->setVisited(false);
+        vertex->setProcessing(false);
+    }
+
+    // Perform DFS on each unvisited vertex
+    for (const auto& vertex : g->getVertexSet()) {
+        if (!vertex->isVisited()) {
+            if (!dfsIsDAG(vertex))
+                return false; // Cycle found, not a DAG
+        }
+    }
+
+    // If DFS traversal completes without finding a cycle, the graph is a DAG
     return true;
 }
 
@@ -22,7 +36,22 @@ bool isDAG(const Graph<T>* g)  {
  */
 template<class T>
 bool dfsIsDAG(Vertex<T> *v)  {
-    //TODO
+    // If the vertex is currently being processed, then a cycle is found
+    if (v->isProcessing())
+        return false;
+
+    // Mark the vertex as being processed
+    v->setProcessing(true);
+
+    // Recursively visit adjacent vertices
+    for (const auto& neighbor : v->getAdj()) {
+        if (!dfsIsDAG(neighbor.getDest()))
+            return false;
+    }
+
+    // Mark the vertex as visited and no longer being processed
+    v->setVisited(true);
+    v->setProcessing(false);
     return true;
 }
 
