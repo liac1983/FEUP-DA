@@ -1,25 +1,48 @@
 // By: Gonçalo Leão
 
 bool subsetSum(unsigned int A[], unsigned int n, unsigned int T, unsigned int subset[], unsigned int &subsetSize) {
-    // Try all possible combinations of elements in A
-    for (unsigned int mask = 0; mask < (1 << n); mask++) {
+    // Static memory allocation is used since it's faster but this assumes there are at most 20 values in the subset (n <= 100).
+    bool curCandidate[20]; // current solution candidate being built
+// Prepare the first candidate
+    for(unsigned int i = 0; i < n; i++) {
+        curCandidate[i] = false;
+    }
+// Iterate over all the candidates
+    while (true) {
+// Verify if the candidate is a solution
         unsigned int sum = 0;
-        unsigned int count = 0;
-
-        for (unsigned int i = 0; i < n; i++) {
-            if (mask & (1 << i)) {
-                sum += A[i];
-                subset[count++] = A[i];
-            }
+        for(unsigned int k = 0; k < n; k++) {
+            sum += A[k]*((unsigned int)curCandidate[k]);
         }
-
-        if (sum == T) {
-            subsetSize = count;
+        if(sum == T) {
+// Build and return the solution
+            subsetSize = 0;
+            for(unsigned int k = 0; k < n; k++) {
+                if(curCandidate[k]) {
+                    subset[subsetSize++] = A[k];
+                }
+            }
             return true;
         }
+// Get the next candidate
+        unsigned int curIndex = 0;
+        while(curCandidate[curIndex]) {
+            curIndex++;
+            if(curIndex == n) break;
+        }
+        if(curIndex == n) break;
+// Set the boolean of the higher positions in A in the candidate solution back to 0.
+// Example: 1 1 0 1 -> 0 0 1 1.
+// Enumeration of the 8 candidates for an array of length 3:
+// 0 0 0 -> 1 0 0 -> 0 1 0 -> 1 1 0 -> 0 0 1 -> 1 0 1 -> 0 1 1 -> 1 1 1
+// (it's like incrementing by 1 numbers in binary written backwards)
+        for(unsigned int i = 0; i < curIndex; i++) {
+            curCandidate[i] = false;
+        }
+        curCandidate[curIndex] = true;
     }
-
     return false;
+
 }
 
 /// TESTS ///

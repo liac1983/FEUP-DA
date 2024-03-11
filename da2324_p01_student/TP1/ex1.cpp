@@ -15,39 +15,38 @@ template <typename T>
  * Follows the algorithm described in theoretical classes.
  */
 vector<T> topsort(const Graph<T>* g) {
-    vector<T> res;
-    // Calculate indegrees for each vertex
-    for (const auto& vertex : g->getVertexSet()) {
-        vertex->setIndegree(0);
+    std::vector<T> res;
+    for (auto v : g->getVertexSet()) {
+        v->setIndegree(0);
     }
-    for (const auto& vertex : g->getVertexSet()) {
-        for (const auto& neighbor : vertex->getAdj()) {
-            neighbor.getDest()->setIndegree(neighbor.getDest()->getIndegree() + 1);
+    for (auto v : g->getVertexSet()) {
+        for (auto e : v->getAdj()) {
+            e.getDest()->setIndegree(e.getDest()->getIndegree() + 1);
         }
     }
-    // Queue to store vertices with indegree 0
-    queue<Vertex<T>*> zeroIndegreeVertices;
-    for (const auto& vertex : g->getVertexSet()) {
-        if (vertex->getIndegree() == 0) {
-            zeroIndegreeVertices.push(vertex);
+    std::queue<Vertex<T>*> q;
+    for (auto v : g->getVertexSet()) {
+        if (v->getIndegree() == 0) {
+            q.push(v);
         }
     }
-    // Perform topological sort
-    while (!zeroIndegreeVertices.empty()) {
-        Vertex<T>* currVertex = zeroIndegreeVertices.front();
-        zeroIndegreeVertices.pop();
-        res.push_back(currVertex->getInfo());
-        for (const auto& neighbor : currVertex->getAdj()) {
-            neighbor.getDest()->setIndegree(neighbor.getDest()->getIndegree() - 1);
-            if (neighbor.getDest()->getIndegree() == 0) {
-                zeroIndegreeVertices.push(neighbor.getDest());
+    while (!q.empty()) {
+        Vertex<T>* v = q.front();
+        q.pop();
+        res.push_back(v->getInfo());
+        for (auto e : v->getAdj()) {
+            auto w = e.getDest();
+            w->setIndegree(w->getIndegree() - 1);
+            if (w->getIndegree() == 0) {
+                q.push(w);
             }
         }
     }
-    // Check for cycle (if not all vertices are visited)
-    if (res.size() != g->getNumVertex()) {
-        // Return empty vector if cycle exists
-        return vector<T>();
+    if (res.size() != g->getVertexSet().size()) {
+        std::cout << "Impossible topological ordering!" << std::endl;
+        res.clear();
+        return res;
     }
     return res;
+
 }

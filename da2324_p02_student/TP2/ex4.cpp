@@ -4,35 +4,36 @@
 #include <vector>
 
 double fractionalKnapsack(unsigned int values[], unsigned int weights[], unsigned int n, unsigned int maxWeight, double usedItems[]) {
-    // Create a vector of pairs to store the value-to-weight ratios and the corresponding item index
-    std::vector<std::pair<double, int>> valueWeightRatio(n);
-    for (int i = 0; i < n; ++i) {
-        valueWeightRatio[i] = std::make_pair((double) values[i] / weights[i], i);
+    // Step 1: Sort items by decreasing value/weight ratio
+    std::vector<unsigned int> sortedIndices;
+    for(unsigned int i = 0; i < n; i++) {
+        usedItems[i] = 0.0;
+        sortedIndices.push_back(i);
     }
-
-    // Sort items based on their value-to-weight ratio in non-increasing order
-    std::sort(valueWeightRatio.begin(), valueWeightRatio.end(), std::greater<std::pair<double, int>>());
-
+    std::sort(sortedIndices.begin(), sortedIndices.end(), [values,weights](unsigned int i,
+                                                                           unsigned int j) {
+        return static_cast<double>(values[i])/weights[i] >
+               static_cast<double>(values[j])/weights[j];
+    });
+// Step 2: Process the items
     double totalValue = 0.0;
-    // Initialize usedItems array to store the portion of each item used
-    std::fill(usedItems, usedItems + n, 0.0);
-
-    // Iterate through the sorted items and add items to the knapsack
-    for (int i = 0; i < n; ++i) {
-        int index = valueWeightRatio[i].second; // Retrieve the original index of the item
-        if (weights[index] <= maxWeight) {
-            // If the item can be fully included in the knapsack, include it entirely
-            usedItems[index] = 1.0;
-            totalValue += values[index];
-            maxWeight -= weights[index];
-        } else {
-            // If the item cannot be fully included, include a fraction of it
-            usedItems[index] = (double) maxWeight / weights[index];
-            totalValue += usedItems[index] * values[index];
-            break; // No need to continue as the knapsack is full
+    unsigned int remaningWeight = maxWeight;
+    for(unsigned int i = 0; i < n; i++) {
+        if(remaningWeight == 0) break; // stop earlier because the knapsack is full
+        if(remaningWeight >= weights[sortedIndices[i]]) {
+// Fully add the next item
+            usedItems[sortedIndices[i]] = 1.0;
+            totalValue += static_cast<double>(values[sortedIndices[i]]);
+            remaningWeight -= weights[sortedIndices[i]];
+        }
+        else {
+// Partially add the item to completely fill the knapsack
+            usedItems[sortedIndices[i]] = static_cast<double>(remaningWeight) /
+                                          weights[sortedIndices[i]];
+            totalValue += usedItems[sortedIndices[i]] * values[sortedIndices[i]];
+            break;
         }
     }
-
     return totalValue;
 }
 

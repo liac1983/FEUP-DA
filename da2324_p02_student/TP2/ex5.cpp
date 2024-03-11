@@ -3,54 +3,68 @@
 #include <vector>
 #include <algorithm>
 
+// Bruteforce
 bool changeMakingBF(unsigned int C[], unsigned int Stock[], unsigned int n, unsigned int T, unsigned int usedCoins[]) {
-    // Initialize usedCoins array to keep track of the number of coins used for each denomination
-    std::fill(usedCoins, usedCoins + n, 0);
-
-    // Iterate through all possible combinations of coins
-    for (unsigned int i = 0; i <= Stock[0]; ++i) {
-        for (unsigned int j = 0; j <= Stock[1]; ++j) {
-            for (unsigned int k = 0; k <= Stock[2]; ++k) {
-                for (unsigned int l = 0; l <= Stock[3]; ++l) {
-                    // Calculate the total value of coins in this combination
-                    unsigned int total = i * C[0] + j * C[1] + k * C[2] + l * C[3];
-                    if (total == T) {
-                        // If the total matches the target amount, update usedCoins array and return true
-                        usedCoins[0] = i;
-                        usedCoins[1] = j;
-                        usedCoins[2] = k;
-                        usedCoins[3] = l;
-                        return true;
-                    }
+    // Static memory allocation is used since it's faster but this assumes there are at most 20 coin values (n <= 20).
+    unsigned int curCandidate[20]; // current solution candidate being built
+// Prepare the first candidate
+    for(unsigned int i = 0; i < n; i++) {
+        curCandidate[i] = 0;
+    }
+// Iterate over all the candidates
+    bool foundSol = false;
+    unsigned int minCoins; // value of the best solution found so far
+    while (true) {
+// Verify if the candidate is a solution
+        unsigned int totalValue = 0;
+        unsigned int totalCoins = 0;
+        for(unsigned int k = 0; k < n; k++) {
+            totalValue += C[k]*curCandidate[k];
+            totalCoins += curCandidate[k];
+        }
+        if(totalValue == T) {
+// Check if the solution is better than the previous one (or if it's the first one)
+            if(!foundSol || totalCoins < minCoins) {
+                foundSol = true;
+                minCoins = totalCoins;
+                for(unsigned int k = 0; k < n; k++) {
+                    usedCoins[k] = curCandidate[k];
                 }
             }
         }
+// Get the next candidate
+        unsigned int curIndex = 0;
+        while(curCandidate[curIndex] == Stock[curIndex]) {
+            curIndex++;
+            if(curIndex == n) break;
+        }
+        if(curIndex == n) break;
+// Set the stock of the higher coin values in the candidate solution back to 0.
+// Example with 1 stock per coin value: 1 1 0 1 -> 0 0 1 1.
+// Enumeration of the 8 candidates for 3 coin values with 0-1 stock:
+// 0 0 0 -> 1 0 0 -> 0 1 0 -> 1 1 0 -> 0 0 1 -> 1 0 1 -> 0 1 1 -> 1 1 1
+// (it's like incrementing by 1 numbers in binary written backwards)
+        for(unsigned int i = 0; i < curIndex; i++) {
+            curCandidate[i] = 0;
+        }
+        curCandidate[curIndex]++;
     }
-
-    // If no combination matches the target amount, return false
-    return false;
+    return foundSol;
 }
 
+// Greedy
+// Time: O(D*S), Space: O(D), where D is the number of coin values and S is the maximum amount of stock of any value
 bool changeMakingGR(unsigned int C[], unsigned int Stock[], unsigned int n, unsigned int T, unsigned int usedCoins[]) {
-    // Sort coin denominations in descending order
-    std::sort(C, C + n, std::greater<unsigned int>());
-
-    // Initialize usedCoins array to keep track of the number of coins used for each denomination
-    std::fill(usedCoins, usedCoins + n, 0);
-
-    // Iterate through coin denominations
-    for (unsigned int i = 0; i < n; ++i) {
-        // Try to use as many coins of the current denomination as possible
-        unsigned int numCoins = std::min(Stock[i], T / C[i]);
-        usedCoins[i] = numCoins;
-        T -= numCoins * C[i];
+    for(unsigned int i = 0; i < n; i++) {
+        usedCoins[i] = 0;
     }
-
-    // Check if exact change is possible
-    if (T == 0)
-        return true;
-    else
-        return false;
+    for(int i = n - 1; i >= 0; i--) {
+        while(usedCoins[i] < Stock[i] && T >= C[i]) {
+            usedCoins[i]++;
+            T -= C[i];
+        }
+    }
+    return T == 0;
 }
 
 /// TESTS ///

@@ -5,50 +5,47 @@
 
 using namespace std;
 
-unsigned int calculateTotalValue(const std::vector<unsigned int>& values, const std::vector<unsigned int>& weights, const std::vector<bool>& chosenItems) {
-    unsigned int totalValue = 0;
-    for (size_t i = 0; i < values.size(); ++i) {
-        if (chosenItems[i]) {
-            totalValue += values[i];
-        }
-    }
-    return totalValue;
-}
-void knapsackBruteForce(const std::vector<unsigned int>& values, const std::vector<unsigned int>& weights, size_t index, unsigned int maxWeight, std::vector<bool>& chosenItems, std::vector<bool>& bestChosenItems, unsigned int& bestValue) {
-    if (index == values.size()) {
-        unsigned int totalWeight = 0;
-        for (size_t i = 0; i < values.size(); ++i) {
-            if (chosenItems[i]) {
-                totalWeight += weights[i];
-            }
-        }
-        if (totalWeight <= maxWeight) {
-            unsigned int totalValue = calculateTotalValue(values, weights, chosenItems);
-            if (totalValue > bestValue) {
-                bestValue = totalValue;
-                bestChosenItems = chosenItems;
-            }
-        }
-        return;
-    }
-    chosenItems[index] = true;
-    knapsackBruteForce(values, weights, index + 1, maxWeight, chosenItems, bestChosenItems, bestValue);
-    chosenItems[index] = false;
-    knapsackBruteForce(values, weights, index + 1, maxWeight, chosenItems, bestChosenItems, bestValue);
-}
-
-
 unsigned int integerKnapsack(unsigned int values[], unsigned int weights[], unsigned int n, unsigned int maxWeight, bool usedItems[]) {
-    std::vector<unsigned int> valuesVec(values, values + n);
-    std::vector<unsigned int> weightsVec(weights, weights + n);
-    std::vector<bool> chosenItems(n, false);
-    std::vector<bool> bestChosenItems;
-    unsigned int bestValue = 0;
-    knapsackBruteForce(valuesVec, weightsVec, 0, maxWeight, chosenItems, bestChosenItems, bestValue);
-    for (size_t i = 0; i < n; ++i) {
-        usedItems[i] = bestChosenItems[i];
+    // Static memory allocation is used since it's faster but this assumes there are at most 20 items (n <= 20).
+    bool curCandidate[20]; // current solution candidate being built
+// Prepare the first candidate
+    for(unsigned int i = 0; i < n; i++) {
+        curCandidate[i] = false;
     }
-    return bestValue;
+// Iterate over all the candidates
+    bool foundSol = false;
+    unsigned int maxValue; // value of the best solution found so far
+    while (true) {
+// Verify if the candidate is a solution
+        unsigned int totalValue = 0;
+        unsigned int totalWeight = 0;
+        for(unsigned int k = 0; k < n; k++) {
+            totalValue += values[k]*curCandidate[k];
+            totalWeight += weights[k]*curCandidate[k];
+        }
+        if(totalWeight <= maxWeight) {
+// Check if the solution is better than the previous one (or if it's the first one)
+            if(!foundSol || totalValue > maxValue) {
+                foundSol = true;
+                maxValue = totalValue;
+                for(unsigned int k = 0; k < n; k++) {
+                    usedItems[k] = curCandidate[k];
+                }
+            }
+        }
+// Get the next candidate
+        unsigned int curIndex = 0;
+        while(curCandidate[curIndex]) {
+            curIndex++;
+            if(curIndex == n) break;
+        }
+        if(curIndex == n) break;
+        for(unsigned int i = 0; i < curIndex; i++) {
+            curCandidate[i] = false;
+        }
+        curCandidate[curIndex] = true;
+    }
+    return maxValue;
 }
 
 /// TESTS ///
