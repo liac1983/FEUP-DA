@@ -2,9 +2,42 @@
 
 #include "exercises.h"
 
+// Função auxiliar para fazer a busca em profundidade
+static void backtrack(unsigned int values[], unsigned int weights[], unsigned int n, unsigned int maxWeight, bool usedItems[], unsigned int currVal, unsigned int currWeight, unsigned int index, unsigned int &maxVal) {
+    // Verifica se chegamos ao final da lista de itens
+    if (index == n) {
+        // Atualiza o valor máximo
+        if (currVal > maxVal) {
+            maxVal = currVal;
+            // Atualiza quais itens foram usados
+            for (unsigned int i = 0; i < n; ++i) {
+                usedItems[i] = false;
+            }
+            for (unsigned int i = 0; i < n; ++i) {
+                usedItems[i] = (currWeight & (1 << i)) != 0;
+            }
+        }
+        return;
+    }
+
+    // Verifica se o item atual cabe na mochila
+    if (weights[index] <= maxWeight - currWeight) {
+        // Tenta incluir o item
+        backtrack(values, weights, n, maxWeight, usedItems, currVal + values[index], currWeight + weights[index], index + 1, maxVal);
+    }
+    // Tenta não incluir o item
+    backtrack(values, weights, n, maxWeight, usedItems, currVal, currWeight, index + 1, maxVal);
+}
+
 unsigned int knapsackBT(unsigned int values[], unsigned int weights[], unsigned int n, unsigned int maxWeight, bool usedItems[]) {
-    //TODO
-    return 0;
+    // Variável para armazenar o valor máximo obtido
+    unsigned int maxVal = 0;
+
+    // Chama a função de busca em profundidade
+    backtrack(values, weights, n, maxWeight, usedItems, 0, 0, 0, maxVal);
+
+    // Retorna o valor máximo encontrado
+    return maxVal;
 }
 
 /// TESTS ///

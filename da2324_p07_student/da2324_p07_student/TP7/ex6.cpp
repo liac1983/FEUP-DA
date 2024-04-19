@@ -3,8 +3,26 @@
 #include "exercises.h"
 
 bool changeMakingBT(unsigned int C[], unsigned int Stock[], unsigned int n, unsigned int T, unsigned int usedCoins[]) {
-    //TODO
-    return false;
+    // Base case: if T is zero, we've reached the target
+    if (T == 0)
+        return true;
+
+    // If T is negative or no denominations left
+    if (T < 0 || n == 0)
+        return false;
+
+    // Try including the last denomination
+    if (Stock[n - 1] > 0 && T >= C[n - 1]) {
+        usedCoins[n - 1]++;
+        Stock[n - 1]--;
+        if (changeMakingBT(C, Stock, n, T - C[n - 1], usedCoins))
+            return true;
+        usedCoins[n - 1]--;
+        Stock[n - 1]++;
+    }
+
+    // Exclude the last denomination and try again
+    return changeMakingBT(C, Stock, n - 1, T, usedCoins);
 }
 
 /// TESTS ///

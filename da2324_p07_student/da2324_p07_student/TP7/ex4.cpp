@@ -18,7 +18,30 @@ void  Labyrinth::print() const {
 }
 
 bool Labyrinth::findGoal(int x, int y) {
-    //TODO
+    // Base case: If current position is the exit, print message and return true
+    if (labyrinth[x][y] == MAZE_EXIT) {
+        std::cout << "Exit found at position (" << x << ", " << y << ")!" << std::endl;
+        return true;
+    }
+
+    // Mark current position as visited
+    visited[x][y] = true;
+
+    // Explore adjacent cells (up, down, left, right)
+    if (x > 0 && labyrinth[x - 1][y] != MAZE_WALL && !visited[x - 1][y]) {
+        if (findGoal(x - 1, y)) return true; // Move up
+    }
+    if (x < 9 && labyrinth[x + 1][y] != MAZE_WALL && !visited[x + 1][y]) {
+        if (findGoal(x + 1, y)) return true; // Move down
+    }
+    if (y > 0 && labyrinth[x][y - 1] != MAZE_WALL && !visited[x][y - 1]) {
+        if (findGoal(x, y - 1)) return true; // Move left
+    }
+    if (y < 9 && labyrinth[x][y + 1] != MAZE_WALL && !visited[x][y + 1]) {
+        if (findGoal(x, y + 1)) return true; // Move right
+    }
+
+    // If no adjacent cell leads to the exit, backtrack
     return false;
 }
 

@@ -1,6 +1,8 @@
 // By: Gonçalo Leão
 
 #include "exercises.h"
+#include <algorithm>
+#include <iostream>
 
 bool Activity::operator==(const Activity &a2) const {
     return start == a2.start && finish == a2.finish;
@@ -11,8 +13,40 @@ bool Activity::overlaps(const Activity &a2) const {
 }
 
 std::vector<Activity> activitySelectionBT(std::vector<Activity> A) {
+    std::sort(A.begin(), A.end()); // Sort activities by finish time
     std::vector<Activity> res;
-    //TODO
+    std::vector<Activity> currentSelection;
+
+    // Helper function to check if the current activity conflicts with any in the selection
+    auto conflictsWithCurrentSelection = [&](const Activity &a) {
+        for (const Activity &act : currentSelection) {
+            if (a.overlaps(act))
+                return true;
+        }
+        return false;
+    };
+
+    // Backtracking function
+    auto backtrack = [&](unsigned int index) {
+        if (index >= A.size()) {
+            // Base case: reached end of activities
+            if (currentSelection.size() > res.size())
+                res = currentSelection; // Update result if current selection is better
+            return;
+        }
+
+        // Include the activity if it doesn't conflict
+        if (!conflictsWithCurrentSelection(A[index])) {
+            currentSelection.push_back(A[index]);
+            backtrack(index + 1);
+            currentSelection.pop_back();
+        }
+
+        // Exclude the activity and explore other possibilities
+        backtrack(index + 1);
+    };
+
+    backtrack(0); // Start backtracking from the first activity
     return res;
 }
 

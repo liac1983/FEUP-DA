@@ -3,7 +3,26 @@
 #include "exercises.h"
 
 bool subsetSumBT(unsigned int A[], unsigned int n, unsigned int T, unsigned int subset[], unsigned int &subsetSize) {
-    subsetSize = 0; // do not forget to initialize the subset's size!!!
+    if (T == 0) {
+        return true; // Subset with sum equal to target sum found
+    }
+    if (n == 0 || T < 0) {
+        return false; // No subset with sum equal to target sum found
+    }
+
+    // Exclude the last element and recursively search
+    if (subsetSumBT(A, n - 1, T, subset, subsetSize)) {
+        return true;
+    }
+
+    // Include the last element and recursively search
+    subset[subsetSize++] = A[n - 1];
+    if (subsetSumBT(A, n - 1, T - A[n - 1], subset, subsetSize)) {
+        return true;
+    }
+
+    // If neither inclusion nor exclusion leads to the target sum, backtrack
+    subsetSize--;
     return false;
 }
 
