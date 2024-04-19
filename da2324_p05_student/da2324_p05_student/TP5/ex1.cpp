@@ -1,9 +1,47 @@
 #include "exercises.h"
 #include <iostream>
+#include <limits>
 
 bool changeMakingDP(unsigned int C[], unsigned int Stock[], unsigned int n, unsigned int T, unsigned int usedCoins[]) {
-    //TODO
-    return false;
+    // Create a 2D vector to store the minimum number of coins needed for each value from 0 to T
+    std::vector<std::vector<unsigned int>> dp(T + 1, std::vector<unsigned int>(n + 1, std::numeric_limits<unsigned int>::max()));
+
+    // Initialize the base case
+    for (unsigned int i = 0; i <= n; ++i)
+        dp[0][i] = 0;
+
+    // Iterate through each value from 1 to T
+    for (unsigned int t = 1; t <= T; ++t) {
+        // Iterate through each coin denomination
+        for (unsigned int i = 1; i <= n; ++i) {
+            // Check if the current coin denomination can be used for the current value t
+            if (C[i - 1] <= t) {
+                // Check if using the current coin results in a smaller number of coins needed
+                if (dp[t - C[i - 1]][i] != std::numeric_limits<unsigned int>::max() && dp[t - C[i - 1]][i] + 1 < dp[t][i - 1]) {
+                    dp[t][i] = dp[t - C[i - 1]][i] + 1;
+                }
+            }
+            // If the current coin is not used, copy the value from the previous coin denomination
+            if (dp[t][i - 1] < dp[t][i]) {
+                dp[t][i] = dp[t][i - 1];
+            }
+        }
+    }
+
+    // Backtrack to determine which coins were used
+    unsigned int t = T;
+    unsigned int i = n;
+    while (t > 0 && i > 0) {
+        if (dp[t][i] != dp[t][i - 1]) {
+            usedCoins[i - 1] += 1;
+            t -= C[i - 1];
+        } else {
+            --i;
+        }
+    }
+
+    // Check if change can be made
+    return dp[T][n] != std::numeric_limits<unsigned int>::max();
 }
 
 /// TESTS ///
