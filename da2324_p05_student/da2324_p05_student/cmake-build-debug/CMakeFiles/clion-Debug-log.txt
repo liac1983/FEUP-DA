@@ -1,0 +1,4 @@
+C:\Users\lara2\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/Users/lara2/AppData/Local/Programs/CLion/bin/ninja/win/x64/ninja.exe -G Ninja -S "C:\Users\lara2\OneDrive\Ambiente de Trabalho\FEUP-DA\FEUP-DA\da2324_p05_student\da2324_p05_student" -B "C:\Users\lara2\OneDrive\Ambiente de Trabalho\FEUP-DA\FEUP-DA\da2324_p05_student\da2324_p05_student\cmake-build-debug"
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/lara2/OneDrive/Ambiente de Trabalho/FEUP-DA/FEUP-DA/da2324_p05_student/da2324_p05_student/cmake-build-debug

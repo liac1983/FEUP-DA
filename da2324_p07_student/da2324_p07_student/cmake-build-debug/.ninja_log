@@ -1,0 +1,17 @@
+# ninja log v5
+4	44	0	C:/Users/lara2/OneDrive/Ambiente de Trabalho/FEUP-DA/FEUP-DA/da2324_p07_student/da2324_p07_student/cmake-build-debug/CMakeFiles/cmake.verify_globs	44c5192aee0825f0
+9	1456	7352278187967350	CMakeFiles/TP7.dir/TP7/ex4.cpp.obj	c20457d53d93f09e
+0	1460	7352278187997367	CMakeFiles/TP7.dir/TP7/ex5.cpp.obj	b1ba1017d5f17859
+94	1643	7352278189368932	CMakeFiles/TP7.dir/TP7/ex1.cpp.obj	85b48501ae34ad8e
+126	1644	7352278189850756	lib/googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj	df98b8bab637c799
+20	1664	7352278190096271	CMakeFiles/TP7.dir/TP7/ex6.cpp.obj	9e97dd2bedffed5f
+39	1669	7352278190116273	CMakeFiles/TP7.dir/TP7/ex7.cpp.obj	ef40d5fbabffe472
+49	1679	7352278190246300	CMakeFiles/TP7.dir/TP7/ex8.cpp.obj	f25417bf5abd7bf9
+112	1840	7352278191821532	lib/googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj	f26f718828fbe605
+75	3143	7352278204788854	lib/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj	caba7335305fced4
+142	6895	7352278242051396	lib/googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj	4c79ded88c147cc1
+6897	9919	7352278272630775	lib/libgtest.a	aee905aa2a5ac791
+9934	10124	7352278274675447	lib/libgtest_main.a	e37368fbd60593ce
+9920	10412	7352278277573082	lib/libgmock.a	9c867f7e7c3c50f2
+10412	10571	7352278279103844	lib/libgmock_main.a	ce65e46ca3a3744a
+10571	13746	7352278310633071	TP7.exe	4a58252c7598768f

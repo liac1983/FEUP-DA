@@ -1,0 +1,17 @@
+# ninja log v5
+3	41	0	C:/Users/lara2/OneDrive/Ambiente de Trabalho/FEUP-DA/FEUP-DA/da2324_p05_student/da2324_p05_student/cmake-build-debug/CMakeFiles/cmake.verify_globs	8151a4773f9faff3
+1	302	7352272477407583	CMakeFiles/DATA_STRUCTURES.dir/data_structures/UFDS.cpp.obj	fee48eaa638ff6e9
+11	613	7352272478812871	CMakeFiles/DATA_STRUCTURES.dir/data_structures/Heap.cpp.obj	6173ef54901f22b3
+613	866	7352272483143880	libDATA_STRUCTURES.a	9fef306cba96ffc3
+143	1830	7352272490515811	lib/googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj	6e83ea6206b8510b
+20	1856	7352272493054780	CMakeFiles/TP5.dir/TP5/ex2.cpp.obj	5d4942a7b137f832
+48	1912	7352272493401315	CMakeFiles/TP5.dir/TP5/ex3.cpp.obj	93961ca601be0aff
+36	2072	7352272493861354	CMakeFiles/TP5.dir/TP5/ex1.cpp.obj	86477ee83a72afbb
+99	2072	7352272494031375	lib/googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj	eee5b59323a71005
+75	3161	7352272506022691	lib/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj	e6ee6af8bc140172
+119	6979	7352272544065281	lib/googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj	fbb41854ba225da2
+6981	9735	7352272571830590	lib/libgtest.a	aee905aa2a5ac791
+9745	9898	7352272573443723	lib/libgtest_main.a	e37368fbd60593ce
+9735	10200	7352272576449837	lib/libgmock.a	9c867f7e7c3c50f2
+10200	10320	7352272577673294	lib/libgmock_main.a	ce65e46ca3a3744a
+10320	13433	7352272608727287	TP5.exe	cc070b4687e6bf6a
