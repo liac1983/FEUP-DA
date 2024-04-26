@@ -2,49 +2,56 @@
 
 #include "exercises.h"
 #include <limits>
-#include <iostream>
 #include <vector>
 
-unsigned int calculateTotalDistance(const unsigned int **dists, unsigned int n, const unsigned int *path) {
-    unsigned int totalDistance = 0;
-    for (unsigned int i = 0; i < n - 1; ++i) {
-        totalDistance += dists[path[i]][path[i + 1]];
-    }
-    // Add distance from the last city back to the initial city
-    totalDistance += dists[path[n - 1]][path[0]];
-    return totalDistance;
-}
 
-void tspBTUtil(const unsigned int **dists, unsigned int n, unsigned int path[], bool visited[], unsigned int currentCity, unsigned int &minDistance, unsigned int currentDistance) {
-    if (currentCity == n) {
-        // Reached the end of permutation, check if it's a valid tour
-        minDistance = std::min(minDistance, currentDistance);
-        return;
-    }
-
-    for (unsigned int nextCity = 0; nextCity < n; ++nextCity) {
-        if (!visited[nextCity]) {
-            visited[nextCity] = true;
-            path[currentCity] = nextCity;
-            unsigned int newDistance = currentDistance + dists[path[currentCity - 1]][nextCity];
-            tspBTUtil(dists, n, path, visited, currentCity + 1, minDistance, newDistance);
-            visited[nextCity] = false;
+void tspBTRec(const unsigned int **dists, unsigned int n, unsigned int curIndex, unsigned
+int curDist, unsigned int curPath[], unsigned int &minDist, unsigned int path[]) {
+    if (curIndex == n) {
+        // add the distance back to the initial mode
+        curDist += dists[curPath[n-1]][curPath[0]];
+        if(curDist < minDist) {
+            minDist = curDist;
+            // Copy the current state to the array storing the best state found so far
+            for (unsigned int i = 0; i < n; i++) {
+                path[i] = curPath[i];
+            }
         }
+        return ;
+    }
+
+    // Try to move to the i-th vertex if the total distance does not exceed the best
+    // distance found and the vertex is not yet visited in curPath
+
+    for (unsigned int i = 1; i < n; i++) { // i starts at 1 and not 0 since it is assumed
+        // that node 0 is the initial node so it will not be in the middle of the path
+        if (curDist + dists[curPath[curIndex -1]][i] < minDist) {
+            bool isNewVertex = true;
+            for (unsigned int j = 1; j < curIndex; j++) {
+                if (curPath[j] == i) {
+                    isNewVertex = false;
+                    break;
+                }
+            }
+            if (isNewVertex) {
+                curPath[curIndex] = i;
+                tspBTRec(dists, n, curIndex+1, curDist + dists[curPath[curIndex - 1]][curPath[curIndex]], curPath, minDist, path );
+            }
+        }
+
     }
 }
 
 unsigned int tspBT(const unsigned int **dists, unsigned int n, unsigned int path[]) {
-    bool visited[] = {false};
-    unsigned int minDistance = std::numeric_limits<unsigned int>::max();
+    unsigned int curPath[10000]; // static memory allocation is faster :)
+    unsigned int minDist;
+    minDist = std::numeric_limits<unsigned int>::max();
 
-    // Start from city 0
-    visited[0] = true;
-    path[0] = 0;
-
-    // Start recursive backtracking from the first city
-    tspBTUtil(dists, n, path, visited, 1, minDistance, 0);
-
-    return minDistance;
+    // Assumes path starts at node 0 ...
+    curPath[0] = 0;
+    // ... so in the first recursive call curINdex starts at 1 rather than 0
+    tspBTRec(dists, n, 1, 0, curPath, minDist, path);
+    return minDist;
 }
 
 /// TESTS ///

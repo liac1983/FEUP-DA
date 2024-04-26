@@ -3,10 +3,10 @@
 #include "exercises.h"
 
 bool subsetSumBT(unsigned int A[], unsigned int n, unsigned int T, unsigned int subset[], unsigned int &subsetSize) {
-    if (T == 0) {
-        return true; // Subset with sum equal to target sum found
+    if (n == 0) {
+        return (T == 0 && subsetSize > 0); // Check if the desired sum is reached and subset is not empty
     }
-    if (n == 0 || T < 0) {
+    if (T < 0) {
         return false; // No subset with sum equal to target sum found
     }
 
@@ -15,16 +15,21 @@ bool subsetSumBT(unsigned int A[], unsigned int n, unsigned int T, unsigned int 
         return true;
     }
 
-    // Include the last element and recursively search
-    subset[subsetSize++] = A[n - 1];
-    if (subsetSumBT(A, n - 1, T - A[n - 1], subset, subsetSize)) {
-        return true;
+    // Include the last element if there is enough space in subset array
+    if (subsetSize < n) {
+        subset[subsetSize++] = A[n - 1];
+        if (subsetSumBT(A, n - 1, T - A[n - 1], subset, subsetSize)) {
+            return true;
+        }
+        // Backtrack if including the last element didn't lead to the target sum
+        subsetSize--;
     }
 
-    // If neither inclusion nor exclusion leads to the target sum, backtrack
-    subsetSize--;
     return false;
 }
+
+
+
 
 /// TESTS ///
 #include <gtest/gtest.h>

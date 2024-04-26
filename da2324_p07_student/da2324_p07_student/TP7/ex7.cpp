@@ -13,7 +13,7 @@ bool Activity::overlaps(const Activity &a2) const {
 }
 
 std::vector<Activity> activitySelectionBT(std::vector<Activity> A) {
-    std::sort(A.begin(), A.end()); // Sort activities by finish time
+    /*std::sort(A.begin(), A.end()); // Sort activities by finish time
     std::vector<Activity> res;
     std::vector<Activity> currentSelection;
 
@@ -47,7 +47,8 @@ std::vector<Activity> activitySelectionBT(std::vector<Activity> A) {
     };
 
     backtrack(0); // Start backtracking from the first activity
-    return res;
+    return res;*/
+    return A;
 }
 
 /// TESTS ///
